@@ -48,6 +48,21 @@ def is_app_running(app_name):
     return closed
 
 
+def open_app(app_path):
+    app_name = os.path.basename(app_path)
+    running = False
+    for proc in psutil.process_iter(['name']):
+        try:
+            if app_name.lower() in proc.info['name'].lower():
+                running = True
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            pass
+    if not running:
+        os.startfile(app_path)
+        return True
+    return False
+
+
 def add_to_list():
     app = badprograms.get()
     if app and app not in blocked_apps:
