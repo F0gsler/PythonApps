@@ -103,7 +103,10 @@ def quit_app(icon, item):
 
 
 def setup_tray():
-    image = Image.open(resource_path("logo.png"))
+    try:
+        image = Image.open(resource_path("logo.png"))
+    except Exception:
+        image = Image.new('RGB', (64, 64), '#4f8ef7')  # Reserve-ikon
     menu = pystray.Menu(
         item("Åbn", show_window),
         item("Luk", quit_app)
@@ -119,8 +122,11 @@ window = Tk()
 window.geometry("400x400")
 window.title("Budget App")
 
-logo = PhotoImage(file=resource_path("logo.png"))
-window.iconphoto(True, logo)
+try:
+    logo = PhotoImage(file=resource_path("logo.png"))
+    window.iconphoto(True, logo)
+except Exception:
+    pass  # Hvis logo ikke kan indlæses, kører appen bare uden vindues-ikon
 window.configure(background="#0f1117")
 
 window.protocol("WM_DELETE_WINDOW", hide_window)
